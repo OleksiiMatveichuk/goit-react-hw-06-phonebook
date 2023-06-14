@@ -1,8 +1,11 @@
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { updateFilter } from 'redux/slice';
 
-export const Filter = ({ filterChange, value }) => {
+export const Filter = () => {
+  const dispatch = useDispatch();
+
   return (
     <>
       <p>Finde contacts by name</p>
@@ -16,14 +19,9 @@ export const Filter = ({ filterChange, value }) => {
           aria-describedby="inputGroup-sizing-default"
           type="text"
           name="filter"
-          value={value}
-          onChange={filterChange}
+          onChange={e => dispatch(updateFilter(e.target.value))}
         />
       </InputGroup>
     </>
   );
-};
-
-Filter.propTypes = {
-  value: PropTypes.string.isRequired,
 };

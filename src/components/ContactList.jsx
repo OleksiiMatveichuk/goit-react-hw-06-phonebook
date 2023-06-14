@@ -1,11 +1,21 @@
-import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectContacts, selectFilterContact } from 'redux/selectors';
+import { deleteContact } from 'redux/slice';
 
-export const ContactList = ({ array, clbDelete }) => {
+export const ContactList = () => {
+  const contacts = useSelector(selectContacts);
+  const filterValue = useSelector(selectFilterContact);
+  const dispatch = useDispatch();
+
+  const filteredContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filterValue.toLowerCase())
+  );
+
   return (
     <ListGroup as="ul">
-      {array.map((el, i) => (
+      {filteredContacts.map((el, i) => (
         <ListGroup.Item as="li" key={i + 1}>
           <p>
             {el.name}: {el.number}
@@ -14,7 +24,7 @@ export const ContactList = ({ array, clbDelete }) => {
             variant="secondary"
             type="button"
             name={el.id}
-            onClick={() => clbDelete(el.id)}
+            onClick={() => dispatch(deleteContact(el.id))}
           >
             Delete
           </Button>
@@ -22,8 +32,4 @@ export const ContactList = ({ array, clbDelete }) => {
       ))}
     </ListGroup>
   );
-};
-
-ContactList.propTypes = {
-  array: PropTypes.array.isRequired,
 };

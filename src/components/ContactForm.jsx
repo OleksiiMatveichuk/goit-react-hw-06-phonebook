@@ -1,14 +1,16 @@
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/slice';
+import { selectContacts } from 'redux/selectors';
 
 export const ContactForm = ({ submit }) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
   const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -28,6 +30,14 @@ export const ContactForm = ({ submit }) => {
 
   const onSubmit = e => {
     e.preventDefault();
+    const isExist = contacts.find(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+    if (isExist) {
+      alert('Contact already exist');
+      return;
+    }
+
     const contact = { name, number };
     dispatch(addContact(contact));
 
